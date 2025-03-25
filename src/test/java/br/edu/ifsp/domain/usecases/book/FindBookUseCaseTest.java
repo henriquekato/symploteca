@@ -5,6 +5,9 @@ import br.edu.ifsp.domain.entities.book.BookGender;
 import br.edu.ifsp.domain.entities.book.BookStatus;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -48,12 +51,13 @@ class FindBookUseCaseTest {
         }
 
         @Tag("UnitTest")
-        @Test
+        @ParameterizedTest
+        @ValueSource(ints = {1,2,3,4,5})
         @DisplayName("should return empty if book doesnt exist by id")
-        void shouldReturnEmptyIfBookDoesntExistById() {
-            when(bookDAO.findOne(3)).thenReturn(Optional.empty());
-            assertThat(sut.findOne(3)).isEqualTo(Optional.empty());
-            verify(bookDAO, times(1)).findOne(3);
+        void shouldReturnEmptyIfBookDoesntExistByDifferentId(Integer id) {
+            when(bookDAO.findOne(anyInt())).thenReturn(Optional.empty());
+            assertThat(sut.findOne(id)).isEqualTo(Optional.empty());
+            verify(bookDAO, times(1)).findOne(id);
         }
 
         @Tag("UnitTest")
@@ -99,6 +103,13 @@ class FindBookUseCaseTest {
         void shouldThrowAnExceptionIfIsbnIsEmpty() {
             assertThatThrownBy(()->sut.findOneByIsbn("")).isInstanceOf(IllegalArgumentException.class);
             verify(bookDAO, never()).findByIsnb("");
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        void shouldThrowExceptionIfIsbnIsBlank(String input) {
+            assertThatThrownBy(()->sut.findOneByIsbn(input)).isInstanceOf(IllegalArgumentException.class);
+            verify(bookDAO, never()).findByIsnb(input);
         }
     }
 

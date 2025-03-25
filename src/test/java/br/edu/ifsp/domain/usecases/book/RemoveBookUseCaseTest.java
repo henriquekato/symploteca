@@ -82,7 +82,6 @@ class RemoveBookUseCaseTest {
         }
 
         @Tag("UnitTest")
-
         @Test
         @DisplayName("should remove book only one time")
         void shouldRemoveBookOnlyOneTime() {
