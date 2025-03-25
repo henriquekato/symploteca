@@ -16,7 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateBookUseCaseTest {
@@ -42,6 +42,8 @@ public class CreateBookUseCaseTest {
         when(bookDAO.findByIsnb(anyString())).thenReturn(Optional.empty());
         when(bookDAO.create(firstBook)).thenReturn(1);
         assertThat(sut.insert(firstBook)).isEqualTo(1);
+        verify(bookDAO).findByIsnb(anyString());
+        verify(bookDAO).create(firstBook);
     }
 
     @Tag("UnitTest")
@@ -50,6 +52,8 @@ public class CreateBookUseCaseTest {
     void shouldThrowAnExceptionIfIsnbWasAlreadyRegistered() {
         when(bookDAO.findByIsnb(firstBook.getIsbn())).thenReturn(Optional.ofNullable(firstBook));
         assertThatThrownBy(()->sut.insert(secondBook)).isInstanceOf(EntityAlreadyExistsException.class);
+        verify(bookDAO).findByIsnb(firstBook.getIsbn());
+        verify(bookDAO, never()).create(firstBook);
     }
 
     @Tag("UnitTest")
@@ -60,5 +64,7 @@ public class CreateBookUseCaseTest {
         when(bookDAO.create(firstBook)).thenReturn(1);
         assertThat(sut.insert(firstBook)).isEqualTo(1);
         assertThatThrownBy(()->sut.insert(firstBook)).isInstanceOf(EntityAlreadyExistsException.class);
+        verify(bookDAO, times(2)).findByIsnb(firstBook.getIsbn());
+        verify(bookDAO, times(1)).create(firstBook);
     }
 }
