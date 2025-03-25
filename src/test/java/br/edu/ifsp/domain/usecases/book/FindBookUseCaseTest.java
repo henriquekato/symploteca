@@ -6,6 +6,8 @@ import br.edu.ifsp.domain.entities.book.BookStatus;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
@@ -15,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -53,12 +56,23 @@ class FindBookUseCaseTest {
         @Tag("UnitTest")
         @ParameterizedTest
         @ValueSource(ints = {1,2,3,4,5})
+//        @MethodSource(value = "provideIdsToNonexistentBooksTest")
         @DisplayName("should return empty if book doesnt exist by id")
         void shouldReturnEmptyIfBookDoesntExistByDifferentId(Integer id) {
             when(bookDAO.findOne(anyInt())).thenReturn(Optional.empty());
             assertThat(sut.findOne(id)).isEqualTo(Optional.empty());
             verify(bookDAO, times(1)).findOne(id);
         }
+
+//        static Stream<Arguments> provideIdsToNonexistentBooksTest(){
+//            return Stream.of(
+//                    Arguments.of(1),
+//                    Arguments.of(2),
+//                    Arguments.of(3),
+//                    Arguments.of(4),
+//                    Arguments.of(5)
+//            );
+//        }
 
         @Tag("UnitTest")
         @Test
@@ -67,7 +81,10 @@ class FindBookUseCaseTest {
             assertThatThrownBy(()->sut.findOne(null)).isInstanceOf(IllegalArgumentException.class);
             verify(bookDAO, never()).findOne(null);
         }
+
     }
+
+
 
     @Nested
     class findByIsbn{
