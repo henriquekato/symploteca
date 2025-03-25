@@ -43,8 +43,8 @@
 | livro removido 2 vezes | inválido |       | livro removido 1 vez |
 
 # update
-| classe             | validade | teste | saída            |
-|--------------------|----------|-------|------------------|
-| livro existe       | válido   |       | livro atualizado |
-| livro não existe   | inválido |       |                  |
-| isnb já cadastrado | inválido |       | livro não criado |
+| classe             | validade | teste | saída                |
+|--------------------|----------|-------|----------------------|
+| livro existe       | válido   |       | livro atualizado     |
+| livro não existe   | inválido |       | livro não atualizado |
+| isnb já cadastrado | inválido |       | livro não atualizado |
