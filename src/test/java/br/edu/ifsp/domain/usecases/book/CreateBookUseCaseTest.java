@@ -48,7 +48,7 @@ public class CreateBookUseCaseTest {
     @Test
     @DisplayName("should throw an exception if isnb was already registered")
     void shouldThrowAnExceptionIfIsnbWasAlreadyRegistered() {
-        when(bookDAO.findByIsnb("1234")).thenReturn(Optional.ofNullable(firstBook));
+        when(bookDAO.findByIsnb(firstBook.getIsbn())).thenReturn(Optional.ofNullable(firstBook));
         assertThatThrownBy(()->sut.insert(secondBook)).isInstanceOf(EntityAlreadyExistsException.class);
     }
 
