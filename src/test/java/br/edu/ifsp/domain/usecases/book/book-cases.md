@@ -9,7 +9,7 @@
 | classe            | validade | teste | saída                |
 |-------------------|----------|-------|----------------------|
 | id existe         | válido   |       | livro recuperado     |
-| id não existe     | válido   |       | livro não recuperado |
+| id não existe     | inválido |       | livro não recuperado |
 | id null           | inválido |       | livro não recuperado |
 
 # find one by isbn
@@ -27,15 +27,24 @@
 | não há livros cadastrados      | válido   |       | lista vazia         |
 
 # remove by id
-| classe        | validade | teste | saída              |
-|---------------|----------|-------|--------------------|
-| id existe     | válido   |       | livro removido     |
-| id não existe | válido   |       | livro não removido |
-| id null       | inválido |       | livro não removido |
+| classe                 | validade | teste | saída                |
+|------------------------|----------|-------|----------------------|
+| id existe              | válido   |       | livro removido       |
+| id não existe          | inválido |       | livro não removido   |
+| id null                | inválido |       | livro não removido   |
+| livro removido 2 vezes | inválido |       | livro removido 1 vez |
 
 # remove by book
-| classe           | validade | teste | saída              |
-|------------------|----------|-------|--------------------|
-| livro existe     | válido   |       | livro removido     |
-| livro não existe | válido   |       | livro não removido |
-| livro null       | inválido |       | livro não removido |
+| classe                 | validade | teste | saída                |
+|------------------------|----------|-------|----------------------|
+| livro existe           | válido   |       | livro removido       |
+| livro não existe       | inválido |       | livro não removido   |
+| livro null             | inválido |       | livro não removido   |
+| livro removido 2 vezes | inválido |       | livro removido 1 vez |
+
+# update
+| classe             | validade | teste | saída            |
+|--------------------|----------|-------|------------------|
+| livro existe       | válido   |       | livro atualizado |
+| livro não existe   | inválido |       |                  |
+| isnb já cadastrado | inválido |       | livro não criado |

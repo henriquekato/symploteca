@@ -59,6 +59,15 @@ class RemoveBookUseCaseTest {
         void shouldThrowExceptionIfIdIsNull() {
             assertThatThrownBy(()->sut.remove((Integer) null)).isInstanceOf(EntityNotFoundException.class);
         }
+
+        @Test
+        @DisplayName("should remove book by id only one time")
+        void shouldRemoveBookByIdOnlyOneTime() {
+            when(bookDAO.findOne(firstBook.getId())).thenReturn(Optional.ofNullable(firstBook)).thenThrow(EntityNotFoundException.class);
+            when(bookDAO.deleteByKey(firstBook.getId())).thenReturn(true);
+            assertThat(sut.remove(firstBook.getId())).isTrue();
+            assertThatThrownBy(()->sut.remove(firstBook.getId())).isInstanceOf(EntityNotFoundException.class);
+        }
     }
 
     @Nested
@@ -70,6 +79,17 @@ class RemoveBookUseCaseTest {
             when(bookDAO.findOne(firstBook.getId())).thenReturn(Optional.ofNullable(firstBook));
             when(bookDAO.delete(firstBook)).thenReturn(true);
             assertThat(sut.remove(firstBook)).isTrue();
+        }
+
+        @Tag("UnitTest")
+
+        @Test
+        @DisplayName("should remove book only one time")
+        void shouldRemoveBookOnlyOneTime() {
+            when(bookDAO.findOne(firstBook.getId())).thenReturn(Optional.ofNullable(firstBook)).thenThrow(EntityNotFoundException.class);
+            when(bookDAO.delete(firstBook)).thenReturn(true);
+            assertThat(sut.remove(firstBook)).isTrue();
+            assertThatThrownBy(()->sut.remove(firstBook)).isInstanceOf(EntityNotFoundException.class);
         }
 
         @Tag("UnitTest")
