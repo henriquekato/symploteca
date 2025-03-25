@@ -17,7 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FindBookUseCaseTest {
@@ -42,8 +42,9 @@ class FindBookUseCaseTest {
         @Test
         @DisplayName("should return book by id")
         void shouldReturnBookById() {
-            when(bookDAO.findOne(1)).thenReturn(Optional.ofNullable(firstBook));
-            assertThat(sut.findOne(1)).isEqualTo(Optional.ofNullable(firstBook));
+            when(bookDAO.findOne(firstBook.getId())).thenReturn(Optional.ofNullable(firstBook));
+            assertThat(sut.findOne(firstBook.getId())).isEqualTo(Optional.ofNullable(firstBook));
+            verify(bookDAO, times(1)).findOne(firstBook.getId());
         }
 
         @Tag("UnitTest")
@@ -52,6 +53,7 @@ class FindBookUseCaseTest {
         void shouldReturnEmptyIfBookDoesntExistById() {
             when(bookDAO.findOne(3)).thenReturn(Optional.empty());
             assertThat(sut.findOne(3)).isEqualTo(Optional.empty());
+            verify(bookDAO, times(1)).findOne(3);
         }
 
         @Tag("UnitTest")
@@ -59,6 +61,7 @@ class FindBookUseCaseTest {
         @DisplayName("should throw an exception if id is null")
         void shouldThrowAnExceptionIfIdIsNull() {
             assertThatThrownBy(()->sut.findOne(null)).isInstanceOf(IllegalArgumentException.class);
+            verify(bookDAO, never()).findOne(null);
         }
     }
 
@@ -70,6 +73,7 @@ class FindBookUseCaseTest {
         void shouldReturnBookByIsbn() {
             when(bookDAO.findByIsnb(firstBook.getIsbn())).thenReturn(Optional.ofNullable(firstBook));
             assertThat(sut.findOneByIsbn(firstBook.getIsbn())).isEqualTo(Optional.ofNullable(firstBook));
+            verify(bookDAO, times(1)).findByIsnb(firstBook.getIsbn());
         }
 
         @Tag("UnitTest")
@@ -78,6 +82,7 @@ class FindBookUseCaseTest {
         void shouldEmptyIfBookDoesntExistByIsbn() {
             when(bookDAO.findByIsnb(anyString())).thenReturn(Optional.empty());
             assertThat(sut.findOneByIsbn(firstBook.getIsbn())).isEqualTo(Optional.empty());
+            verify(bookDAO, times(1)).findByIsnb(firstBook.getIsbn());
         }
 
         @Tag("UnitTest")
@@ -85,6 +90,7 @@ class FindBookUseCaseTest {
         @DisplayName("should throw an exception if isbn is null")
         void shouldThrowAnExceptionIfIsbnIsNull() {
             assertThatThrownBy(()->sut.findOneByIsbn(null)).isInstanceOf(IllegalArgumentException.class);
+            verify(bookDAO, never()).findByIsnb(null);
         }
 
         @Tag("UnitTest")
@@ -92,6 +98,7 @@ class FindBookUseCaseTest {
         @DisplayName("should throw an exception if isbn is empty")
         void shouldThrowAnExceptionIfIsbnIsEmpty() {
             assertThatThrownBy(()->sut.findOneByIsbn("")).isInstanceOf(IllegalArgumentException.class);
+            verify(bookDAO, never()).findByIsnb("");
         }
     }
 
@@ -103,6 +110,7 @@ class FindBookUseCaseTest {
         void shouldReturnAllRegisteredBooks() {
             when(bookDAO.findAll()).thenReturn(List.of(firstBook, secondBook));
             assertThat(sut.findAll()).isEqualTo(List.of(firstBook, secondBook));
+            verify(bookDAO, times(1)).findAll();
         }
 
         @Tag("UnitTest")
@@ -111,6 +119,7 @@ class FindBookUseCaseTest {
         void shouldReturnAnEmptyListIfThereAreNoBooksRegistered() {
             when(bookDAO.findAll()).thenReturn(Collections.emptyList());
             assertThat(sut.findAll()).isEqualTo(Collections.emptyList());
+            verify(bookDAO, times(1)).findAll();
         }
     }
 }
